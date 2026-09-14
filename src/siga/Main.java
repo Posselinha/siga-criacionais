@@ -3,9 +3,8 @@ package siga;
 /**
  * Ponto de entrada do SIGA (código INICIAL da atividade da Aula 6).
  *
- * (2) a montagem da consulta usa um método com parâmetros demais; (3) qualquer
- * parte do sistema pode instanciar seu próprio AcessoDados. Sua tarefa é
- * aplicar Abstract Factory, Builder e Singleton.
+ * (3) qualquer parte do sistema pode instanciar seu próprio AcessoDados. Sua
+ * tarefa é aplicar Abstract Factory, Builder e Singleton.
  */
 public class Main {
 
@@ -19,9 +18,8 @@ public class Main {
         acesso.conectar(new FabricaPostgreSQL());
 
         System.out.println();
-        // PROBLEMA 2 em ação: o que significa cada número nesta chamada?
-        String consulta = acesso.montarConsulta("aluno", "curso = 'DSM'", "nome",
-                50, 0, 30, true);
+        // Utilizando o builder para construir a string de consulta
+        String consulta = acesso.montarConsultaBuilder("aluno").comFiltro("curso = 'DSM'").comOrdenacao("nome").comLimite(50).comOffset(0).comSomenteAtivos().montarConsulta();
         System.out.println("Consulta montada: " + consulta);
 
         System.out.println("\nObserve: nada garante que conexão e comando sejam do mesmo");

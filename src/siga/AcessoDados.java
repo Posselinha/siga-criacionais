@@ -3,18 +3,11 @@ package siga;
 /**
  * Código INICIAL da atividade — contém os problemas PROPOSITAIS a refatorar.
  *
- * PROBLEMA 2 — construtor telescópico (falta Builder): a configuração de uma
- * consulta é passada por um método com muitos parâmetros opcionais (limite,
- * offset, ordenação, timeout...), ilegível e sujeito a erro de ordem dos
- * argumentos.
- *
  * PROBLEMA 3 — instância não controlada (falta Singleton): nada impede que
  * várias partes do sistema criem seu próprio AcessoDados, quando deveria
  * existir um único ponto de acesso ao banco.
  *
- * Tarefa: - Etapa 3: criar um Builder para a configuração da consulta
- * (parâmetros opcionais nomeados e encadeáveis). - Etapa 4: transformar o
- * AcessoDados em um Singleton.
+ * Tarefa: - Etapa 4: transformar o AcessoDados em um Singleton.
  */
 public class AcessoDados {
 
@@ -30,26 +23,57 @@ public class AcessoDados {
         comando.executar("SELECT * FROM aluno");
     }
 
-    // PROBLEMA 2: método telescópico — muitos parâmetros opcionais.
-    public String montarConsulta(String tabela, String filtro, String ordenacao,
-            int limite, int offset, int timeoutSegundos,
-            boolean somenteAtivos) {
-        StringBuilder sb = new StringBuilder("SELECT * FROM ").append(tabela);
-        if (filtro != null) {
-            sb.append(" WHERE ").append(filtro);
+    // método para chamar o builder
+    public MontarConsultaBuilder montarConsultaBuilder(String tabela) {
+        return new MontarConsultaBuilder(tabela);
+    }
+
+    // Utilização de classe Builder para evitar método telescopico
+    public static class MontarConsultaBuilder {
+
+        // Unicas duas variaveis que vi a necessidade de salvar
+        private String tabela;
+        private String filtro;
+        StringBuilder sb = new StringBuilder("SELECT * FROM ").append(this.tabela);
+
+        // Construtor que pede a tabela
+        public MontarConsultaBuilder(String tabela) {
+            this.tabela = tabela;
         }
-        if (somenteAtivos) {
-            sb.append(filtro != null ? " AND ativo = 1" : " WHERE ativo = 1");
+
+        // Caso tenha filtro
+        public MontarConsultaBuilder comFiltro(String filtro) {
+            this.filtro = filtro;
+            sb.append(" WHERE ").append(this.filtro);
+            return this;
         }
-        if (ordenacao != null) {
+
+        // Caso seja somente ativos
+        public MontarConsultaBuilder comSomenteAtivos() {
+            sb.append(this.filtro != null ? " AND ativo = 1" : " WHERE ativo = 1");
+            return this;
+        }
+
+        // caso queira ordenacao
+        public MontarConsultaBuilder comOrdenacao(String ordenacao) {
             sb.append(" ORDER BY ").append(ordenacao);
+            return this;
         }
-        if (limite > 0) {
+
+        public MontarConsultaBuilder comLimite(int limite) {
             sb.append(" LIMIT ").append(limite);
+            return this;
         }
-        if (offset > 0) {
+
+        // Caso queira offset
+        public MontarConsultaBuilder comOffset(int offset) {
             sb.append(" OFFSET ").append(offset);
+            return this;
         }
-        return sb.toString();
+
+        // retornar a string
+        public String montarConsulta() {
+            return this.sb.toString();
+        }
     }
 }
