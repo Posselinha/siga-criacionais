@@ -11,6 +11,9 @@ siga-criacionais/
         ├── ObjetosAcessoDados.java   (implementações MySQL e PostgreSQL; prontas)
         ├── AcessoDados.java          (contém os três problemas a refatorar)
         └── Main.java                 (demonstra os problemas em execução)
+        └── FabricaBanco.java         (Abstract Factory)
+        └── FabricaMySQL.java         (Fábrica do MySQL)
+        └── FabricaPostgreSQL.java    (Fábrica do PostgreSQL)
 ```
 
 ## Como compilar e executar
