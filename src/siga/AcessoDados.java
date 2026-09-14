@@ -11,8 +11,19 @@ package siga;
  */
 public class AcessoDados {
 
+    // Salvar a instancia
+    private static final AcessoDados INSTANCIA = new AcessoDados();
     private Conexao conexao;
     private Comando comando;
+
+    // Construtor privado para impedir new externo
+    private AcessoDados() {
+    }
+
+    // Acessar a instancia de forma externa
+    public static AcessoDados getInstancia() {
+        return INSTANCIA;
+    }
 
     // Utilização da interface de abstract Factory para receber a fabrica correta
     public void conectar(FabricaBanco fabrica) {

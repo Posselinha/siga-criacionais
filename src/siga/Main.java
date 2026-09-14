@@ -11,7 +11,8 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("=== SIGA - Atividade de Padrões Criacionais (código inicial) ===\n");
 
-        AcessoDados acesso = new AcessoDados();
+        // Utilizando uma unica instância para suplir o singleton
+        AcessoDados acesso = AcessoDados.getInstancia();
         // Passando as fábricas em vez de utilizar a string fixa
         acesso.conectar(new FabricaMySQL());
         System.out.println();
